@@ -1,4 +1,4 @@
-CREATE SCHEMA IF NOT EXISTS onroad;
+/* CREATE SCHEMA IF NOT EXISTS onroad;
 
 SET TIME ZONE 'WET';
 SET TIME ZONE 'Europe/Berlin';
@@ -36,4 +36,4 @@ CREATE TABLE Routes (
     CONSTRAINT users_routes_id_fk FOREIGN KEY (user_id)
             REFERENCES users(id)
                ON UPDATE CASCADE ON DELETE CASCADE NOT VALID
-);
+); */
