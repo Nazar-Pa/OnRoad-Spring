@@ -11,6 +11,7 @@ public interface UserRepository<T extends User> {
     T get(Long id);
     T update(T data);
     Boolean delete(Long id);
+    Boolean enableUserAccount(String token);
 
     /* More Complex Operations */
 }

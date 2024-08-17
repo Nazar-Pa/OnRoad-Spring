@@ -1,24 +1,24 @@
 package io.pashayev.onroad.domain;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_DEFAULT;
 
 @Data
-@SuperBuilder
 @NoArgsConstructor
-@AllArgsConstructor
 @JsonInclude(NON_DEFAULT)
 public class User {
-    private  Long id;
+    @Id @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
     @NotEmpty(message = "First name cannot be empty")
     private String firstName;
     @NotEmpty(message = "Last name cannot be empty")

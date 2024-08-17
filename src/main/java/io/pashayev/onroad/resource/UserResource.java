@@ -8,10 +8,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
@@ -36,6 +33,19 @@ public class UserResource {
                         .message("User created")
                         .status(HttpStatus.CREATED)
                         .statusCode(HttpStatus.CREATED.value())
+                        .build());
+    }
+
+    @GetMapping("/verify")
+    public ResponseEntity<HttpResponse> confirmUserAccount(@RequestParam("token") String token) {
+        Boolean isSuccess = userService.verifyUser(token);
+        return ResponseEntity.created(getUri()).body(
+                HttpResponse.builder()
+                        .timeStamp(now().toString())
+                        .data(of("Success", isSuccess))
+                        .message("Account verified")
+                        .status(HttpStatus.OK)
+                        .statusCode(HttpStatus.OK.value())
                         .build());
     }
 

@@ -1,11 +1,13 @@
 package io.pashayev.onroad.repository.implementation;
 
 import io.pashayev.onroad.domain.User;
+import io.pashayev.onroad.domain.Verification;
 import io.pashayev.onroad.exception.ApiException;
 import io.pashayev.onroad.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -44,9 +47,9 @@ public class UserRepositoryImpl implements UserRepository<User> {
             jdbc.update(INSERT_USER_QUERY, parameters, holder, new String[] { "id" });
             user.setId(requireNonNull(holder.getKey()).longValue());
             // Send verification URL
-            String verificationUrl = getVerificationUrl(UUID.randomUUID().toString(), ACCOUNT.getType());
+            // String verificationUrl = getVerificationUrl(UUID.randomUUID().toString(), ACCOUNT.getType());
             // Save URL in verification table
-            jdbc.update(INSERT_ACCOUNT_VERIFICATION_URL_QUERY, of("userId", user.getId(), "url", verificationUrl));
+            // jdbc.update(INSERT_ACCOUNT_VERIFICATION_URL_QUERY, of("userId", user.getId(), "url", verificationUrl));
             // Send email to user with verification URL
             // emailService.sendVerificationUrl(user.getFirstName(), user.getEmail(), verificationUrl, ACCOUNT);
             user.setEnabled(false);
@@ -79,10 +82,18 @@ public class UserRepositoryImpl implements UserRepository<User> {
         return null;
     }
 
+    @Override
+    public Boolean enableUserAccount(String token) {
+        List<Verification> allUsers = jdbc.query(GET_USERID_OF_TOKEN, of("token", token), new BeanPropertyRowMapper(Verification.class));
+        // List<Verification> verification = jdbc.queryForObject(GET_USERID_OF_TOKEN, of("token", token), List<T>);
+        jdbc.update(ENABLE_USER_ACCOUNT_QUERY, of("userId", allUsers.get(0).getUserId().longValue(), "enabled", true));
+        System.out.println("all users " + allUsers.get(0).getUserId());
+        return Boolean.TRUE;
+    }
+
     private Integer getEmailCount(String email) {
         return jdbc.queryForObject(COUNT_USER_EMAIL_QUERY, of("email", email), Integer.class);
     }
-
 
     private SqlParameterSource getSqlParameterSource(User user) {
         return new MapSqlParameterSource()
