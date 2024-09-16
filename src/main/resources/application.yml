@@ -1,10 +1,12 @@
 spring:
-  autoconfigure:
-    exclude: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+  #autoconfigure:
+   # exclude: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+  profiles:
+    active: ${ACTIVE_PROFILE:dev}
   datasource:
-    url: jdbc:postgresql://localhost:5432/postgres
-    password: admin
-    username: postgres
+    url: jdbc:postgresql://${POSTGRES_SQL_HOST}:${POSTGRES_SQL_PORT}/${POSTGRES_SQL_DB}
+    password: ${POSTGRES_SQL_PASSWORD}
+    username: ${POSTGRES_SQL_USERNAME}
   jpa:
     data-platform: org.hibernate.dialect.PostgreSQLDialect
     show-sql: true
@@ -12,6 +14,8 @@ spring:
       ddl-auto: update
     properties:
       hibernate:
+        jdbc:
+          time_zone: CET
         globally_quoted_indetifiers: true
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
@@ -19,3 +23,26 @@ spring:
     init:
       mode: always
       continue-an-error: false
+  mail:
+    host: ${EMAIL_HOST}
+    port: ${EMAIL_PORT}
+    username: ${EMAIL_ID}
+    password: ${EMAIL_PASSWORD}
+    default_encoding: UTF-8
+    properties:
+      mail:
+        mime:
+          charset: UTF
+        smtp:
+          writetimeout: 10000
+          connectiontimeout: 10000
+          timeout: 10000
+          auth: true
+          starttls:
+            enable: true
+            required: true
+    verify:
+      host: ${VERIFY_EMAIL_HOST}
+
+server:
+  port: ${SERVER_PORT:8080}

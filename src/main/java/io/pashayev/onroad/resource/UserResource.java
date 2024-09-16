@@ -36,6 +36,19 @@ public class UserResource {
                         .build());
     }
 
+    @PostMapping("/register")
+    public ResponseEntity<HttpResponse> sendOTP(@RequestBody @Valid String otp) {
+        UserDTO userDTO = userService.sendOTPtoNumber(otp);
+        return ResponseEntity.created(getUri()).body(
+                HttpResponse.builder()
+                        .timeStamp(now().toString())
+                        .data(of("user", userDTO))
+                        .message("User created")
+                        .status(HttpStatus.CREATED)
+                        .statusCode(HttpStatus.CREATED.value())
+                        .build());
+    }
+
     @GetMapping("/verify")
     public ResponseEntity<HttpResponse> confirmUserAccount(@RequestParam("token") String token) {
         Boolean isSuccess = userService.verifyUser(token);
