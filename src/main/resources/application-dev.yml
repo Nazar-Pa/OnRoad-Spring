@@ -13,5 +13,5 @@ ACTIVE_PROFILE: dev
 EMAIL_HOST: smtp.gmail.com
 EMAIL_PORT: 587
 EMAIL_ID: chatbotproject.hci@gmail.com
-EMAIL_PASSWORD: chatbotappproject2021
+EMAIL_PASSWORD: bsgf lafh wblo qarz
 VERIFY_EMAIL_HOST: http://localhost:${SERVER_PORT}

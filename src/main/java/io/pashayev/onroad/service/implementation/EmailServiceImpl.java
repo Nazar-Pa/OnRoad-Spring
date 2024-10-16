@@ -1,6 +1,7 @@
 package io.pashayev.onroad.service.implementation;
 
 import io.pashayev.onroad.service.EmailService;
+import io.pashayev.onroad.utils.EmailUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
@@ -23,7 +24,7 @@ public class EmailServiceImpl implements EmailService {
             message.setSubject(NEW_USER_ACCOUNT_VERIFICATION);
             message.setFrom(fromEmail);
             message.setTo(to);
-            message.setText("Hey, this is working hahaha");
+            message.setText(EmailUtils.getEmailMessage(name, host, token));
             emailSender.send(message);
         } catch (Exception exception) {
             System.out.println(exception.getMessage());

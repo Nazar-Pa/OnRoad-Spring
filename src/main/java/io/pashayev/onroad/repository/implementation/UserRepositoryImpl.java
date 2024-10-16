@@ -4,6 +4,7 @@ import io.pashayev.onroad.domain.User;
 import io.pashayev.onroad.domain.Verification;
 import io.pashayev.onroad.exception.ApiException;
 import io.pashayev.onroad.repository.UserRepository;
+import io.pashayev.onroad.service.EmailService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -33,6 +34,8 @@ import static java.util.Objects.requireNonNull;
 public class UserRepositoryImpl implements UserRepository<User> {
     private final NamedParameterJdbcTemplate jdbc;
     private final BCryptPasswordEncoder encoder;
+    private final EmailService emailService;
+    private Verification verification;
 
     @Override
     public User create(User user) {
@@ -47,11 +50,13 @@ public class UserRepositoryImpl implements UserRepository<User> {
             jdbc.update(INSERT_USER_QUERY, parameters, holder, new String[] { "id" });
             user.setId(requireNonNull(holder.getKey()).longValue());
             // Send verification URL
-            // String verificationUrl = getVerificationUrl(UUID.randomUUID().toString(), ACCOUNT.getType());
+            verification = new Verification(user);
+
+//             String verificationUrl = getVerificationUrl(UUID.randomUUID().toString(), ACCOUNT.getType());
             // Save URL in verification table
-            // jdbc.update(INSERT_ACCOUNT_VERIFICATION_URL_QUERY, of("userId", user.getId(), "url", verificationUrl));
+             jdbc.update(INSERT_ACCOUNT_VERIFICATION_URL_QUERY, of("userId", user.getId(), "token", verification.getToken()));
             // Send email to user with verification URL
-            // emailService.sendVerificationUrl(user.getFirstName(), user.getEmail(), verificationUrl, ACCOUNT);
+             emailService.sendSimpleMailMessage(user.getFirstName(), user.getEmail(), verification.getToken());
             user.setEnabled(false);
             // Return the newly created user
             return user;
@@ -84,10 +89,11 @@ public class UserRepositoryImpl implements UserRepository<User> {
 
     @Override
     public Boolean enableUserAccount(String token) {
-        List<Verification> allUsers = jdbc.query(GET_USERID_OF_TOKEN, of("token", token), new BeanPropertyRowMapper(Verification.class));
-        // List<Verification> verification = jdbc.queryForObject(GET_USERID_OF_TOKEN, of("token", token), List<T>);
-        jdbc.update(ENABLE_USER_ACCOUNT_QUERY, of("userId", allUsers.get(0).getUserId().longValue(), "enabled", true));
-        System.out.println("all users " + allUsers.get(0).getUserId());
+        Long user_id = verification.getUserId();
+
+//        List<Verification> allUsers = jdbc.query(GET_USERID_OF_TOKEN, of("token", token), new BeanPropertyRowMapper(Verification.class));
+        jdbc.update(ENABLE_USER_ACCOUNT_QUERY, of("userId", user_id, "enabled", true));
+//        System.out.println("all users " + allUsers.get(0).getUserId());
         return Boolean.TRUE;
     }
 
