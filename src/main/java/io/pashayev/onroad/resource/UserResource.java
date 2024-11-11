@@ -3,6 +3,8 @@ package io.pashayev.onroad.resource;
 import io.pashayev.onroad.domain.HttpResponse;
 import io.pashayev.onroad.domain.User;
 import io.pashayev.onroad.dto.UserDTO;
+import io.pashayev.onroad.dtomapper.UserDTOMapper;
+import io.pashayev.onroad.repository.UserRepository;
 import io.pashayev.onroad.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -21,11 +23,13 @@ import static java.util.Map.*;
 @RequiredArgsConstructor
 public class UserResource {
     private final UserService userService;
+    private final UserRepository<User> userRepository;
 
     // @Valid checks if validation constraints in User are met, like "email cannot be empty
     @PostMapping("/register")
     public ResponseEntity<HttpResponse> saveUser(@RequestBody @Valid User user) {
-        UserDTO userDTO = userService.createUser(user);
+        // UserDTO userDTO = userService.createUser(user);
+        UserDTO userDTO = UserDTOMapper.fromUser(userRepository.create(user));
         return ResponseEntity.created(getUri()).body(
                 HttpResponse.builder()
                         .timeStamp(now().toString())

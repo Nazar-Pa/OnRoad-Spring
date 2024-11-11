@@ -29,7 +29,7 @@ public class Verification {
 
     public Verification(User user) {
         this.userId = user.getId();
-        this.expirationDate = LocalDateTime.now();
+        this.expirationDate = LocalDateTime.now().plusDays(1);
         this.token = UUID.randomUUID().toString();
     }
 }

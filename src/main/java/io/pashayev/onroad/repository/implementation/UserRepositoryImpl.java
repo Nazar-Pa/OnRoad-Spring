@@ -18,6 +18,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -52,9 +53,9 @@ public class UserRepositoryImpl implements UserRepository<User> {
             // Send verification URL
             verification = new Verification(user);
 
-//             String verificationUrl = getVerificationUrl(UUID.randomUUID().toString(), ACCOUNT.getType());
+//          String verificationUrl = getVerificationUrl(UUID.randomUUID().toString(), ACCOUNT.getType());
             // Save URL in verification table
-             jdbc.update(INSERT_ACCOUNT_VERIFICATION_URL_QUERY, of("userId", user.getId(), "token", verification.getToken()));
+            jdbc.update(INSERT_ACCOUNT_VERIFICATION_URL_QUERY, of("userId", user.getId(), "token", verification.getToken(), "expirationDate", verification.getExpirationDate()));
             // Send email to user with verification URL
              emailService.sendSimpleMailMessage(user.getFirstName(), user.getEmail(), verification.getToken());
             user.setEnabled(false);
