@@ -15,3 +15,7 @@ EMAIL_PORT: 587
 EMAIL_ID: chatbotproject.hci@gmail.com
 EMAIL_PASSWORD: bsgf lafh wblo qarz
 VERIFY_EMAIL_HOST: http://localhost:${SERVER_PORT}
+
+#Authentication
+SECRET_KEY: "3cfa76ef14937c1c0ea519f8fc057a80fcd04a7420f8e8bcd0a7567c272e007b"
+EXPIRATION_TIME: 3600000

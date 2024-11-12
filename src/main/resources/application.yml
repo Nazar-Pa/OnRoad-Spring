@@ -43,6 +43,10 @@ spring:
             required: true
     verify:
       host: ${VERIFY_EMAIL_HOST}
+  security:
+    jwt:
+      secret_key: ${SECRET_KEY}
+      expiration_time: ${EXPIRATION_TIME}
 
 server:
   port: ${SERVER_PORT:8080}

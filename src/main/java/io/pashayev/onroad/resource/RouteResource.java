@@ -6,6 +6,7 @@ import io.pashayev.onroad.domain.RouteBody;
 import io.pashayev.onroad.domain.User;
 import io.pashayev.onroad.repository.RouteRepository;
 import io.pashayev.onroad.repository.UserRepository;
+import io.pashayev.onroad.utils.JwtUtil;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -30,11 +31,14 @@ import static java.util.Map.of;
 public class RouteResource {
 
     private final RouteRepository<Route> routeRepository;
+    private JwtUtil jwtUtil = new JwtUtil();
 
     @CrossOrigin(origins = "http://localhost:4200")
     @PostMapping("/create")
     public ResponseEntity<HttpResponse> saveRoute(@RequestBody @Valid RouteBody routeBody) {
         Route route = new Route(routeBody);
+        boolean isValid = jwtUtil.validateToken("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ2YWxpZFVzZXIiLCJleHAiOiIyMDI0LTExLTEyVDE4OjQ5OjA0LjA2NFoiLCJpYXQiOiIyMDI0LTExLTEyVDE4OjQ5OjA0LjA2NFoifQ.PIwmk-1gkdaFF60LuVe70sQAAR5E6dDuXExhDFNnjhE\n", "validUser");
+        System.out.println(isValid);
         Route routeDTO = routeRepository.create(route);
         return ResponseEntity.created(getUri()).body(
                 HttpResponse.builder()

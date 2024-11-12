@@ -12,6 +12,6 @@ public interface UserRepository<T extends User> {
     T update(T data);
     Boolean delete(Long id);
     Boolean enableUserAccount(String token);
-
+    T findByEmail(String data);
     /* More Complex Operations */
 }

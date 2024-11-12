@@ -19,10 +19,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 import static io.pashayev.onroad.enumeration.VerificationType.ACCOUNT;
 import static io.pashayev.onroad.query.UserQuery.*;
@@ -100,6 +97,10 @@ public class UserRepositoryImpl implements UserRepository<User> {
 
     private Integer getEmailCount(String email) {
         return jdbc.queryForObject(COUNT_USER_EMAIL_QUERY, of("email", email), Integer.class);
+    }
+
+    public User findByEmail(String email) {
+        return jdbc.queryForObject(FIND_USER_BY_EMAIL, of("email", email), User.class);
     }
 
     private SqlParameterSource getSqlParameterSource(User user) {

@@ -7,4 +7,5 @@ public class UserQuery {
     public static final String INSERT_ACCOUNT_VERIFICATION_URL_QUERY = "INSERT INTO AccountVerifications (user_id, token, expiration_date) VALUES (:userId, :token, :expirationDate)";
     public static final String GET_USERID_OF_TOKEN = "SELECT * FROM AccountVerifications WHERE token = :token";
     public static final String ENABLE_USER_ACCOUNT_QUERY = "UPDATE Users SET enabled = :enabled WHERE id = :userId";
+    public static final String FIND_USER_BY_EMAIL = "SELECT * FROM Users WHERE email = :email";
 }
